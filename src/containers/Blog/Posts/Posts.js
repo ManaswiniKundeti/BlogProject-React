@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from '../../../axios';
-
+import { Link } from 'react-router-dom';
 import Post from '../../../components/Post/Post';
 import './Posts.css';
 
@@ -30,18 +30,22 @@ class Posts extends Component {
     }
 
     postSelectedHandler = (id) => {
+      //for navigating programatically, remove setState and add below code
+      //this.props.history.push({pathname:'/'+id});
         this.setState({selectedPostId: id});
     }
-    
+
     render () {
         let posts = <p style={{textAlign: 'center'}}>Something went wrong!</p>;
         if (!this.state.error) {
             posts = this.state.posts.map(post => {
-                return <Post 
-                    key={post.id} 
-                    title={post.title} 
-                    author={post.author}
-                    clicked={() => this.postSelectedHandler(post.id)} />;
+              //remove <Link> and add key property back to <Post> to navigate programatically , also changes in postSelectedHandler>
+                return <Link to = {'/' + post.id } key={post.id} >
+                          <Post
+                            title={post.title}
+                            author={post.author}
+                            clicked={() => this.postSelectedHandler(post.id)} />
+                        </Link>;
             });
         }
 
