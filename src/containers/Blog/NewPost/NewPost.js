@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import {Redirect} from 'react-router-dom';
 
 import './NewPost.css';
 
@@ -7,10 +8,12 @@ class NewPost extends Component {
     state = {
         title: '',
         content: '',
-        author: 'Max'
+        author: 'Max',
+        submitted : false
     }
 
     componentDidMount () {
+      //  if unauth => this.props.history.replace('/posts');
         console.log(this.props);
     }
 
@@ -23,12 +26,20 @@ class NewPost extends Component {
         axios.post('/posts', data)
             .then(response => {
                 console.log(response);
+                //this.props.history.push('/posts');    //history pushes the component on to the current page, once pressed back, it goes back to newpost old page
+                this.setState( {submitted: true} );     //unlinke push as abv, redirect replaces the current page , so, dosnt allow the backbutton to go back to prev page
+                //this.props.history.replace('/posts');  //  works same as redirect, if used replace instead of push
             });
     }
 
     render () {
+        let redirect = null;
+        if(this.state.submitted) {
+          redirect = <Redirect to="/posts" />;
+        }
         return (
             <div className="NewPost">
+              {redirect}
                 <h1>Add a Post</h1>
                 <label>Title</label>
                 <input type="text" value={this.state.title} onChange={(event) => this.setState({title: event.target.value})} />
